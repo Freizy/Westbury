@@ -13,8 +13,20 @@ const dbConfig = {
   queueLimit: 0,
 };
 
+//New db connection for online
+const urlDB = `mysql://${process.env.MYSQLUSER} :${process.env.MYSQLPASSWORD}@${process.env.MYSQLHOST} :${process.env.MYSQLPORT}/${process.env.MYSQLDATABASE}`
+
+
 // Create connection pool
-const pool = mysql.createPool(dbConfig);
+//const pool = mysql.createPool(dbConfig);
+const pool = mysql.createPool(urlDB);
+
+
+
+
+//const connection = mysql.createConnection(urlDB);
+
+
 
 // Initialize database and create tables
 async function initializeDatabase() {
@@ -25,7 +37,9 @@ async function initializeDatabase() {
     connection.release();
 
     // Create database if it doesn't exist
-    const dbName = dbConfig.database;
+    //const dbName = dbConfig.database;
+    const dbName = urlDB.database;
+
     await pool.query(`CREATE DATABASE IF NOT EXISTS ${dbName}`);
     await pool.query(`USE ${dbName}`);
 
